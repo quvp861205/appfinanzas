@@ -1,79 +1,117 @@
+# Mis Finanzas - Guía Técnica para Desarrolladores
 
-# Mis Finanzas App
-
-¡Bienvenido a Mis Finanzas! Esta aplicación está diseñada para ayudarte a tomar el control de tus finanzas personales de una manera sencilla e intuitiva. Podrás registrar tus ingresos y gastos, y visualizar balances mensuales y proyecciones anuales para entender mejor tus hábitos financieros.
-
-## Guía de Usuario
-
-A continuación, se detallan las principales funcionalidades de la aplicación y cómo utilizarlas.
+Este documento proporciona todas las instrucciones necesarias para configurar, instalar y ejecutar el proyecto "Mis Finanzas" en un entorno de desarrollo local.
 
 ---
 
-### Gestión de Movimientos (Gastos)
+## Descripción del Proyecto
 
-La pantalla principal te permite gestionar tus gastos diarios.
+"Mis Finanzas" es una aplicación web de finanzas personales desarrollada con **Angular (v20+)**. Permite a los usuarios registrar sus ingresos y gastos, visualizar balances mensuales y obtener una proyección financiera a lo largo del tiempo. La aplicación sigue las mejores y más recientes prácticas de Angular, incluyendo:
 
-#### Agregar un Nuevo Gasto
-1.  **Rellena el formulario "Nuevo Gasto"** que aparece en la parte superior.
-    *   **Monto**: La cantidad que gastaste.
-    *   **Descripción**: Una breve nota para recordar en qué gastaste (ej: "Café con amigos", "Compra de supermercado").
-    *   **Fecha**: El día en que se realizó el gasto. Por defecto, será la fecha actual.
-2.  Haz clic en el botón **Guardar**. El nuevo gasto aparecerá inmediatamente en la lista de "Últimos Movimientos".
+*   **Componentes Standalone**: Arquitectura 100% basada en componentes independientes.
+*   **Signals**: Para una gestión de estado reactiva y eficiente.
+*   **Control Flow Nativo**: Uso de la nueva sintaxis `@` para la lógica en las plantillas.
+*   **ChangeDetectionStrategy.OnPush**: Para un rendimiento optimizado.
 
-#### Editar un Gasto
-1.  En la lista de "Últimos Movimientos", haz clic sobre el gasto que deseas modificar.
-2.  Los datos de ese gasto se cargarán automáticamente en el formulario, que ahora se llamará **"Editar Gasto"**.
-3.  Realiza los cambios que necesites en el monto, la descripción o la fecha.
-4.  Haz clic en el botón **Actualizar** para guardar los cambios.
-
-#### Eliminar un Gasto
-1.  Selecciona el gasto que deseas eliminar haciendo clic sobre él en la lista.
-2.  Aparecerán dos nuevos botones a la izquierda del formulario. Haz clic en el **ícono de la papelera** (`<i class="bi bi-trash"></i>`).
-3.  Confirma que deseas eliminar el movimiento. El gasto desaparecerá de la lista.
+La base de datos y el backend están gestionados por **Firebase**, utilizando **Firestore** como base de datos NoSQL en tiempo real.
 
 ---
 
-### Gestión de Ingresos
+## 1. Prerrequisitos
 
-Para registrar el dinero que recibes, puedes usar la sección de ingresos.
+Antes de empezar, asegúrate de tener instalado el siguiente software en tu máquina:
 
-#### Agregar un Nuevo Ingreso
-1.  Haz clic en el botón de **Agregar Ingreso**.
-2.  Se abrirá un formulario similar al de los gastos.
-    *   **Monto**: La cantidad de dinero que recibiste.
-    *   **Descripción**: El origen del ingreso (ej: "Salario quincenal", "Venta de garage").
-    *   **Fecha**: El día en que recibiste el ingreso.
-3.  Haz clic en **Guardar**.
-
-#### Eliminar un Ingreso
-1.  Dentro de la lista de ingresos, cada registro tendrá un **ícono de papelera** a su lado.
-2.  Haz clic en él para eliminar el ingreso correspondiente.
+*   **Node.js**: Versión 18 o superior. Puedes descargarlo desde [nodejs.org](https://nodejs.org/).
+*   **npm** (Node Package Manager): Se instala automáticamente con Node.js.
+*   **Angular CLI**: La interfaz de línea de comandos de Angular. Para instalarla, abre una terminal y ejecuta:
+    ```bash
+    npm install -g @angular/cli
+    ```
 
 ---
 
-### Balance del Mes
+## 2. Configuración de Firebase
 
-Esta vista te ofrece un resumen detallado de tu situación financiera para el mes en curso. Para acceder a ella, busca el botón o la sección de "Balance".
+El proyecto necesita una cuenta de Firebase para funcionar. Si no tienes una, el primer paso es crearla.
 
-En esta pantalla encontrarás:
-*   **Ingreso Total del Mes**: La suma de todos los ingresos que has registrado en el mes.
-*   **Gasto Fijo del Mes**: La suma de tus gastos recurrentes (pagos a meses sin intereses).
-*   **Gasto Variable del Mes**: La suma de todos los movimientos (gastos diarios) que has registrado.
-*   **Gasto Total del Mes**: La suma del gasto fijo y el gasto variable.
-*   **Saldo Final**: El resultado de restar el gasto total a tu ingreso total. Esto te muestra cuánto dinero te queda al final del mes.
-*   **Semanas**: Un desglose de tu presupuesto semanal, mostrando cuánto has gastado y cuál es tu límite recomendado para no excederte.
+### 2.1. Crear un Proyecto en Firebase
+
+1.  Ve a la [Consola de Firebase](https://console.firebase.google.com/).
+2.  Haz clic en **"Agregar proyecto"**.
+3.  Sigue los pasos para nombrar tu proyecto. Puedes desactivar Google Analytics si no lo necesitas para el desarrollo local.
+4.  Una vez creado el proyecto, serás redirigido al panel principal.
+
+### 2.2. Configurar la Base de Datos Firestore
+
+1.  En el menú de la izquierda, ve a la sección **"Compilación" > "Firestore Database"**.
+2.  Haz clic en **"Crear base de datos"**.
+3.  Elige iniciar en **modo de prueba**. Esto permite leer y escribir en la base de datos sin necesidad de configurar reglas de seguridad complejas al principio.
+4.  Selecciona una ubicación para tus datos (puedes dejar la que viene por defecto).
+5.  Haz clic en **"Habilitar"**.
+
+### 2.3. Obtener las Credenciales de Firebase
+
+Para que tu aplicación Angular pueda conectarse a tu proyecto de Firebase, necesitas las credenciales de configuración.
+
+1.  En el panel de Firebase, ve a la **"Configuración del proyecto"** (el ícono de engranaje junto a "Descripción general del proyecto").
+2.  En la pestaña **"General"**, desplázate hacia abajo hasta la sección **"Tus apps"**.
+3.  Haz clic en el ícono de **web** (`</>`) para registrar una nueva aplicación web.
+4.  Dale un apodo a tu aplicación (ej: "Mis Finanzas Local") y haz clic en **"Registrar app"**.
+5.  Firebase te mostrará un objeto de configuración `firebaseConfig`. **Copia este objeto completo**. Lo necesitarás en el siguiente paso.
 
 ---
 
-### Balance Anual (Proyección)
+## 3. Instalación Local
 
-Esta funcionalidad te brinda una visión a largo plazo de tus finanzas, mostrando una tabla con el balance de los últimos 6 meses, el mes actual y una proyección para los siguientes 6 meses.
+Ahora que tienes todo lo necesario, puedes clonar y configurar el proyecto en tu máquina.
 
-La tabla contiene las siguientes columnas:
-*   **Mes**: El mes correspondiente al registro.
-*   **Ingreso**: El total de ingresos registrados en ese mes.
-*   **Gasto**: El total de gastos (fijos y variables) de ese mes.
-*   **Saldo**: La diferencia entre los ingresos y los gastos del mes (`Ingreso - Gasto`).
-*   **Saldo Acumulado**: La suma de los saldos de los meses anteriores. Te permite ver cómo tu patrimonio crece (o disminuye) con el tiempo.
+### 3.1. Clonar el Repositorio
 
-El mes actual aparecerá resaltado para que puedas identificarlo fácilmente.
+```bash
+git clone https://github.com/quvp861205/appfinanzas.git
+```
+
+### 3.2. Instalar Dependencias
+
+Una vez dentro de la carpeta del proyecto, instala todas las dependencias necesarias con npm:
+
+```bash
+npm install
+```
+
+### 3.3. Configurar las Variables de Entorno
+
+1.  En la raíz del proyecto, busca el archivo `src/environments/environment.ts`.
+2.  Este archivo contiene un objeto `environment` con una propiedad `firebase`. Reemplaza el valor de esta propiedad con el objeto `firebaseConfig` que copiaste en el paso 2.3.
+
+    El archivo debería verse así:
+
+    ```typescript
+    export const environment = {
+      production: false,
+      firebase: {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_AUTH_DOMAIN",
+        projectId: "TU_PROJECT_ID",
+        storageBucket: "TU_STORAGE_BUCKET",
+        messagingSenderId: "TU_MESSAGING_SENDER_ID",
+        appId: "TU_APP_ID"
+      }
+    };
+    ```
+
+---
+
+## 4. Ejecución del Proyecto
+
+Una vez que hayas instalado las dependencias y configurado las variables de entorno, puedes iniciar la aplicación.
+
+1.  En la terminal, dentro de la carpeta del proyecto, ejecuta el siguiente comando:
+
+    ```bash
+    ng serve -o
+    ```
+
+2.  Este comando compilará la aplicación y la abrirá automáticamente en tu navegador web en la dirección `http://localhost:4200/`.
+
+¡Y eso es todo! Ahora tienes el proyecto "Mis Finanzas" corriendo en tu máquina local, conectado a tu propia instancia de Firebase.
