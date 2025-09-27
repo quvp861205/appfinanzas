@@ -1,0 +1,49 @@
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>
+
+@if (user()) {
+  <div class="floating-buttons">
+
+    <button 
+      class="btn btn-primary btn-sm shadow-lg" 
+      (click)="openIngresosDialog()"
+      >
+      <i class="bi bi-cash-coin"></i>
+      Ingresos
+    </button>
+
+    <button 
+      class="btn btn-primary btn-sm shadow-lg"
+      (click)="openMsiDialog()"
+      >
+      <i class="bi bi-credit-card-2-front"></i>
+      M.S.I
+    </button>
+
+    <button 
+      class="btn btn-primary btn-sm shadow-lg"
+      (click)="openBalanceDialog()"
+      >
+      <i class="bi bi-bar-chart-line"></i>
+      Balance
+    </button>
+
+    <button 
+      class="btn btn-primary btn-sm shadow-lg"
+      (click)="openBalanceMensualDialog()"
+      >
+      <i class="bi bi-calendar-month"></i>
+      B.Men
+    </button>
+<!--
+    <button 
+      class="btn btn-danger btn-sm shadow-lg logout-button" 
+      (click)="logout()"
+      >
+      <i class="bi bi-box-arrow-right"></i>
+      Cerrar Sesión
+    </button>
+    -->
+  </div>
+}

@@ -1,0 +1,97 @@
+<div class="dialog-container">
+  <header class="dialog-header">
+    <h1 class="dialog-title">Balance General</h1>
+    <button mat-icon-button class="btn-close" (click)="close()" aria-label="Cerrar diálogo">
+    </button>
+  </header>
+
+  <main class="dialog-content">
+    <div class="date-picker-container">
+      <label for="month-picker">Mes:</label>
+      <input id="month-picker" type="date" [value]="selectedDate()" (change)="onDateChange($event)" class="form-control" />
+    </div>
+
+    <!-- Usamos col-4 y col-8 para mantener la estructura en todas las pantallas -->
+    <div class="row g-3 summary-cards">
+
+      <!-- Columna para Ingresos y Saldo (4 de 12 columnas) -->
+      <div class="col-6">
+        <div class="mini-cards-container h-100">
+          <div class="card mini-card income-card">
+            <div class="card-body">
+              <h5 class="card-title">Ingreso Mes</h5>
+              <p class="card-text fs-5 fw-medium">{{ ingresoTotalDelMes() | currency:'$':'symbol':'1.2-2' }}</p>
+            </div>
+          </div>
+          <div class="card mini-card balance-card mt-2" [class.positive-balance]="saldoFinal() >= 0" [class.negative-balance]="saldoFinal() < 0">
+            <div class="card-body">
+              <h5 class="card-title">Saldo Final</h5>
+              <p class="card-text fs-5 fw-medium">{{ saldoFinal() | currency:'$':'symbol':'1.2-2' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna para Gastos (8 de 12 columnas) -->
+      <div class="col-6">
+        <div class="card expense-card h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Gastos Mes</h5>
+            <div class="expense-details flex-grow-1">
+
+              <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
+                <span class="text-muted">Variables:</span>
+                <span class="fs-5 fw-medium">{{ gastoVariableDelMes() | currency:'$':'symbol':'1.2-2' }}</span>
+              </div>
+
+              <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mt-2">
+                <span class="text-muted">Fijos (MSI):</span>
+                <span class="fs-5 fw-medium">{{ gastoFijoDelMes() | currency:'$':'symbol':'1.2-2' }}</span>
+              </div>
+
+              <hr class="my-2">
+
+              <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
+                <span class="fw-bold">Total:</span>
+                <span class="fs-5 fw-bolder">{{ gastoTotalDelMes() | currency:'$':'symbol':'1.2-2' }}</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de desglose semanal -->
+    <div class="weekly-breakdown">
+      <h3 class="weekly-title">Desglose Semanal de Gastos</h3>
+      <div class="weekly-grid">
+        @for (semana of semanas(); track semana.numSemana) {
+          <div class="week-card" [class.semana-actual]="esSemanaActual(semana)">
+            <div class="week-header">
+              <span class="week-number">Semana {{ semana.numSemana }}</span>
+              <span class="week-dates">
+                {{ semana.fechaInicio | date:"EEE d 'de' MMM" }} - {{ semana.fechaFin | date:"EEE d 'de' MMM" }}
+                <span class="week-days">({{ semana.dias }} días)</span>
+              </span>
+            </div>
+            <div class="week-body">
+              <div class="week-item">
+                <span>Gasto:</span>
+                <span class="gasto">{{ semana.gasto | currency:'$':'symbol':'1.2-2' }}</span>
+              </div>
+              <div class="week-item">
+                <span>Límite:</span>
+                <span class="limite">{{ semana.gastoLimite | currency:'$':'symbol':'1.2-2' }}</span>
+              </div>
+            </div>
+            <div class="week-footer" [class.positive]="semana.saldo >= 0" [class.negative]="semana.saldo < 0">
+              <span>Saldo:</span>
+              <span class="saldo">{{ semana.saldo | currency:'$':'symbol':'1.2-2' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

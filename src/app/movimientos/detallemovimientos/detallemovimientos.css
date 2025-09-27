@@ -1,0 +1,66 @@
+/* Estilos para cada elemento de la lista de movimientos */
+.movimiento-item {
+  transition: all 0.3s ease-in-out;
+  border-left: 5px solid transparent;
+}
+
+.movimiento-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilo para los movimientos de tipo INGRESO */
+.movimiento-item.ingreso {
+  background-color: #e8f5e9; /* Un verde claro y suave */
+  border-left-color: #4CAF50; /* Un verde más oscuro para el borde */
+}
+
+.movimiento-item.ingreso .bi-arrow-down-circle-fill {
+  color: #4CAF50; /* Icono verde */
+}
+
+/* Estilo para los movimientos de tipo GASTO */
+.movimiento-item.gasto {
+  background-color: #ffebee; /* Un rojo claro y suave */
+  border-left-color: #f44336; /* Un rojo más oscuro para el borde */
+}
+
+.movimiento-item.gasto .bi-arrow-up-circle-fill {
+  color: #f44336; /* Icono rojo */
+}
+
+/* Estilo para el botón de editar */
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.movimiento-item.ingreso .btn-outline-light {
+  border-color: #a5d6a7;
+  color: #388e3c;
+}
+
+.movimiento-item.ingreso .btn-outline-light:hover {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.movimiento-item.gasto .btn-outline-light {
+  border-color: #ef9a9a;
+  color: #d32f2f;
+}
+
+.movimiento-item.gasto .btn-outline-light:hover {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.semana-actual {
+  background-color: #e3f2fd; /* O un color claro de tu preferencia */
+}

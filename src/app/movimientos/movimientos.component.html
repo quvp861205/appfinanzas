@@ -1,0 +1,67 @@
+<div class="form-container shadow-lg p-4 rounded-3 mx-3 mt-5">
+  <h2 class="mb-4 text-center text-black text-opacity-50">{{ movimientoSeleccionado() ? 'Editar Gasto' : 'Nuevo Gasto' }}</h2>
+  
+  <form [formGroup]="movimientoForm" (ngSubmit)="guardarMovimiento()">
+
+    <!-- Campos del Formulario -->
+    <div class="row mb-3 align-items-center">
+      <label for="monto" class="col-4 col-form-label"><b>Monto</b></label>
+      <div class="col-8">
+        <input #montoInput id="monto" type="number" class="form-control" formControlName="monto" placeholder="Ej: 15000">
+      </div>
+    </div>
+    <div class="row mb-3 align-items-center">
+      <label for="descripcion" class="col-4 col-form-label"><b>Descripción</b></label>
+      <div class="col-8">
+        <input id="descripcion" type="text" class="form-control" formControlName="descripcion" placeholder="Ej: Compra supermercado">
+      </div>
+    </div>
+    <div class="row mb-3 align-items-center">
+      <label for="fecha" class="col-4 col-form-label"><b>Fecha</b></label>
+      <div class="col-8">
+        <input id="fecha" type="date" class="form-control" formControlName="fecha">
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="d-flex justify-content-between align-items-center mt-2">
+
+      @if (movimientoSeleccionado()) {
+        <div class="d-flex gap-2">
+           <button type="button" class="btn btn-danger btn-sm d-flex align-items-center gap-2" (click)="onEliminar()" title="Eliminar">
+            <i class="bi bi-trash"></i>
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm d-flex align-items-center gap-2" (click)="resetForm()">
+            <i class="bi bi-arrow-counterclockwise"></i>            
+          </button>
+        </div>
+      } @else {
+        <div>&nbsp;</div>
+      }
+
+      <button type="submit" class="btn btn-primary btn-sm d-flex align-items-center gap-2" [disabled]="movimientoForm.invalid">
+        <i class="bi bi-save"></i>
+        <span>{{ movimientoSeleccionado() ? 'Actualizar' : 'Guardar' }}</span>
+      </button>
+
+    </div>
+
+  </form>
+</div>
+
+@if(infoSemanaActual(); as info) {
+    <div class="text-center mt-4">
+        <h3 class="fs-5 mb-1">
+            Semana {{ info.semana.numSemana }} - 
+            <span class="fw-normal">
+                {{ info.semana.fechaInicio | date:'EEE dd' }} al {{ info.semana.fechaFin | date:'EEE dd' }}
+            </span>
+        </h3>
+        <p class="fs-6 text-muted mb-0">
+            Gasto: <span class="fw-bold">{{ info.gastoTotal | currency:'$':'symbol':'1.2-2' }}</span> - 
+            Límite: <span class="fw-bold">{{ info.limite | currency:'$':'symbol':'1.2-2' }}</span>
+        </p>
+    </div>
+}
+
+<app-detalle-movimientos (editarMovimiento)="onEditarMovimiento($event)" />

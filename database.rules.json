@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "movimientos": {
+      ".indexOn": ["email", "fecha"]
+    },
+    "ingresos": {
+      ".indexOn": ["email", "fecha"]
+    },
+    "msi": {
+      ".indexOn": ["descripcion", "fecha","email"]
+    }
+  }
+}

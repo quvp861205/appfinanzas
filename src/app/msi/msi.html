@@ -1,0 +1,143 @@
+<div class="dialog-container">
+  <!-- Encabezado del diálogo -->
+  <header class="dialog-header">
+    <h1 class="dialog-title">Gestión de MSI</h1>
+    <button class="btn-close" (click)="close()" aria-label="Cerrar diálogo"></button>
+  </header>
+
+  <!-- Contenido del diálogo -->
+  <main class="dialog-content">
+    <div class="container">
+      <div class="card shadow-lg mb-1">
+        <div class="card-header">
+          <h3 class="mb-0">Compra a Meses Sin Intereses</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="msiForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row mb-3 align-items-center">
+                  <label for="monto" class="col-4 col-form-label"><b>Monto Total</b></label>
+                  <div class="col-8">
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input type="number" id="monto" class="form-control" formControlName="monto" placeholder="Ej. 1200.00">
+                    </div>
+                    @if (msiForm.get('monto')?.touched && msiForm.get('monto')?.hasError('required')) {
+                      <div class="text-danger mt-1 small">El monto es requerido.</div>
+                    }
+                    @if (msiForm.get('monto')?.touched && msiForm.get('monto')?.hasError('min')) {
+                      <div class="text-danger mt-1 small">El monto debe ser mayor a 0.</div>
+                    }
+                  </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                  <label for="descripcion" class="col-4 col-form-label"><b>Descripción</b></label>
+                  <div class="col-8">
+                    <input type="text" id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ej. Laptop HP">
+                    @if (msiForm.get('descripcion')?.touched && msiForm.get('descripcion')?.hasError('required')) {
+                      <div class="text-danger mt-1 small">La descripción es requerida.</div>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row mb-3 align-items-center">
+                  <label for="fecha" class="col-4 col-form-label"><b>Fecha</b></label>
+                  <div class="col-8">
+                    <input type="date" id="fecha" class="form-control" formControlName="fecha">
+                    @if (msiForm.get('fecha')?.touched && msiForm.get('fecha')?.hasError('required')) {
+                      <div class="text-danger mt-1 small">La fecha es requerida.</div>
+                    }
+                  </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                  <label for="meses" class="col-4 col-form-label"><b># Meses</b></label>
+                  <div class="col-8">
+                    <input type="number" id="meses" class="form-control" formControlName="meses" placeholder="Ej. 12">
+                    @if (msiForm.get('meses')?.touched && msiForm.get('meses')?.hasError('required')) {
+                      <div class="text-danger mt-1 small">El número de meses es requerido.</div>
+                    }
+                     @if (msiForm.get('meses')?.touched && msiForm.get('meses')?.hasError('min')) {
+                      <div class="text-danger mt-1 small">Debe ser de al menos 2 meses.</div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-grid"><button type="submit" class="btn btn-primary" [disabled]="msiForm.invalid"><i class="bi bi-check-lg"></i> Guardar</button></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card shadow-lg">
+        <div class="card-header">
+          <h3 class="mb-0">Mis Compras a MSI</h3>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3 gx-2">
+            <div class="col-md-5">
+              <label for="filterDescripcion" class="form-label">Filtrar por Descripción</label>
+              <select id="filterDescripcion" class="form-select" [value]="selectedDescription()" (change)="onDescriptionFilterChange($event)">
+                <option value="">Seleccionar...</option>
+                <option value="all">Ver Todas</option>
+                @for(desc of uniqueDescriptions(); track desc){
+                  <option [value]="desc">{{ desc }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="filterFecha" class="form-label">Filtrar por Fecha</label>
+              <input type="date" id="filterFecha" class="form-control" [value]="selectedDate()" (input)="onDateFilterChange($event)">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-secondary" (click)="selectedDescription.set(''); selectedDate.set('')">Limpiar</button>
+                <div class="form-check ms-3">
+                  <input class="form-check-input" type="checkbox" id="verAntiguos" (change)="onVerAntiguosChange($event)">
+                  <label class="form-check-label" for="verAntiguos">
+                    Ver Antiguos
+                  </label>
+                </div>
+            </div>
+          </div>
+
+          @if(totalPagoMensual() !== null) {
+            <div class="records-footer">
+              <div class="total-label">Total del Mes:</div>
+              <div class="total-amount">{{ totalPagoMensual() | number:'1.2-2' }}</div>
+            </div>
+          }
+
+          <div class="records-list">
+            <div class="records-header d-none d-md-grid">
+              <div>Descripción</div>
+              <div>Fecha de Pago</div>
+              <div class="text-end">Pago Mensual</div>
+              <div class="text-center">Progreso</div>
+              <div class="text-end">Monto Total</div>
+              <div class="text-center"></div>
+            </div>
+
+            @for (record of filteredRecords(); track trackByRecordId($index, record)) {
+              <div class="record-card">
+                <div class="record-field" data-label="Descripción">{{ record.descripcion }}</div>
+                <div class="record-field" data-label="Fecha">{{ record.fecha }}</div>
+                <div class="record-field text-md-end" data-label="Pago Mensual">{{ record.monto | number:'1.2-2' }}</div>
+                <div class="record-field text-md-center" data-label="Progreso">Mes {{ record.num_mes }} de {{ record.meses }}</div>
+                <div class="record-field text-md-end" data-label="Monto Total">{{ record.montototal | number:'1.2-2' }}</div>
+                <div class="record-field action-field" data-label="">
+                  <button class="btn btn-danger btn-sm" (click)="onDelete(record.descripcion)">
+                    <i class="bi bi-trash"></i>
+                    <span class="d-md-none ms-2"></span>
+                  </button>
+                </div>
+              </div>
+            } @empty {
+              <div class="text-center fst-italic p-4">No hay registros para mostrar.</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

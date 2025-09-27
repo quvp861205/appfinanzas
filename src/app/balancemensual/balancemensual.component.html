@@ -1,0 +1,37 @@
+<div class="dialog-container">
+  <header class="dialog-header">
+    <h1 class="dialog-title">Balance Mensual</h1>
+    <button class="btn-close" (click)="close()" aria-label="Cerrar diálogo"></button>
+  </header>
+
+  <main class="dialog-content">
+    <div class="balance-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Ingresos</th>
+            <th>Gastos</th>
+            <th>Saldo</th>
+            <th>Saldo Acumulado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of balanceMensual(); track item.mes) {
+            <tr [class.current-month]="item.isCurrentMonth">
+              <td>{{ item.mes }}</td>
+              <td>{{ item.ingreso | number:'1.2-2' }}</td>
+              <td>{{ item.gasto | number:'1.2-2' }}</td>
+              <td [class.positive]="item.saldo > 0" [class.negative]="item.saldo < 0">
+                {{ item.saldo | number:'1.2-2' }}
+              </td>
+              <td [class.positive]="item.saldoAcumulado > 0" [class.negative]="item.saldoAcumulado < 0">
+                {{ item.saldoAcumulado | number:'1.2-2' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
