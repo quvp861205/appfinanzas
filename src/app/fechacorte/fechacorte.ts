@@ -6,7 +6,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FechacorteService } from './services/fechacorte.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-fechacorte',
@@ -27,11 +26,12 @@ export class Fechacorte {
   diaCorteActual = signal<string | null>(null);
 
   constructor() {
-    this.fechacorteService.getFechaCorte()
-      .pipe(takeUntilDestroyed())
-      .subscribe(dia => {
-        this.diaCorteActual.set(dia);
-      });
+    this.loadInitialData();
+  }
+
+  private async loadInitialData(): Promise<void> {
+    const dia = await this.fechacorteService.getFechaCorte();
+    this.diaCorteActual.set(dia);
   }
 
   close(): void {
@@ -45,7 +45,7 @@ export class Fechacorte {
         const dia = fechaCompleta.split('-')[2];
 
         await this.fechacorteService.guardarFechaCorte(dia);
-        console.log('¡Día de corte guardado con éxito!', dia);
+        this.diaCorteActual.set(dia); // Update signal after saving
         this.fechaCorteForm.reset();
 
       } catch (error) {

@@ -8,12 +8,11 @@ export const routes: Routes = [
     },
     {
         path: 'gastos',
-        loadComponent: () => import('./movimientos/movimientos.component').then(m => m.MovimientosComponent),
+        loadComponent: () => import('./gastos/gastos.component').then(m => m.MovimientosComponent),
         canActivate: [authGuard]
     },
     {
         path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
-    },
+        loadComponent: () => import('./home/home').then(m => m.HomeComponent)
+    }
 ];

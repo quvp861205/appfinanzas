@@ -14,30 +14,27 @@ export class LoginComponent {
   private router = inject(Router);
 
   constructor() {
-    // Esto es reactivo. Se ejecutará cuando currentUser() cambie de undefined a un usuario.
     effect(() => {
-      if(this.authService.getUID()!='')
-      {
-        const currentUser = this.authService.getUID();
-
-        if (currentUser) {
-          this.authService.setUID(currentUser);
-          this.router.navigate(['/gastos']);
-        }
+      if (this.authService.currentUser()) {
+        this.router.navigate(['/gastos']);
       }
     });
   }
 
   onLogout() {
     this.authService.logout().subscribe({
-      next: () => this.router.navigate(['login']),
+      next: () => this.router.navigate(['/login']),
       error: (err) => console.error('Error en el logout:', err)
     });
   }
 
   onLogin() {
     this.authService.loginConGoogle().subscribe({
-      next: () => this.router.navigate(['gastos']),
+      next: () => {
+        // La redirección ahora es manejada por el HomeComponent.
+        // Una vez que el login es exitoso y el estado de auth cambia,
+        // el 'effect' en HomeComponent se activará.
+      },
       error: (err) => console.error('Error en el login:', err)
     });
   }

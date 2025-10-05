@@ -5,14 +5,14 @@ import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
+import localeEsMx from '@angular/common/locales/es-MX';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
 import { provideServiceWorker } from '@angular/service-worker';
 
-// Registrar los datos de la localización en español
-registerLocaleData(localeEs);
+// Registrar los datos de la localización en español de México
+registerLocaleData(localeEsMx);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    // Establecer el LOCALE_ID a español
-    { provide: LOCALE_ID, useValue: 'es' }
+    // Establecer el LOCALE_ID a español de México
+    { provide: LOCALE_ID, useValue: 'es-MX' }
   ],
 };

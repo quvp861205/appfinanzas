@@ -129,12 +129,11 @@ export class Msi {
         fecha: formValue.fecha!,
         meses: formValue.meses!
       });
-      console.log('Registros MSI creados con éxito');
       this.msiForm.reset();
       this.selectedDescription.set('');
       this.selectedDate.set('');
     } catch (error) {
-      console.error('Error al crear los registros MSI:', error);
+
     }
   }
 
@@ -152,9 +151,9 @@ export class Msi {
     if (confirm(`¿Estás seguro de que quieres eliminar todos los registros para \"${description}\"?`)) {
       try {
         await this.msiService.deleteMsiByDescription(description);
-        console.log(`Registros para \"${description}\" eliminados`);
+
       } catch (error) {
-        console.error('Error al eliminar', error);
+
       }
     }
   }

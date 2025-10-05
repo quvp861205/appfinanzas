@@ -1,7 +1,7 @@
 <div class="form-container shadow-lg p-4 rounded-3 mx-3 mt-5">
-  <h2 class="mb-4 text-center text-black text-opacity-50">{{ movimientoSeleccionado() ? 'Editar Gasto' : 'Nuevo Gasto' }}</h2>
+  <h2 class="mb-4 text-center text-black text-opacity-50">{{ gastoSeleccionado() ? 'Editar Gasto' : 'Nuevo Gasto' }}</h2>
   
-  <form [formGroup]="movimientoForm" (ngSubmit)="guardarMovimiento()">
+  <form [formGroup]="gastoForm" (ngSubmit)="guardarMovimiento()">
 
     <!-- Campos del Formulario -->
     <div class="row mb-3 align-items-center">
@@ -26,7 +26,7 @@
     <!-- Botones de Acción -->
     <div class="d-flex justify-content-between align-items-center mt-2">
 
-      @if (movimientoSeleccionado()) {
+      @if (gastoSeleccionado()) {
         <div class="d-flex gap-2">
            <button type="button" class="btn btn-danger btn-sm d-flex align-items-center gap-2" (click)="onEliminar()" title="Eliminar">
             <i class="bi bi-trash"></i>
@@ -39,9 +39,9 @@
         <div>&nbsp;</div>
       }
 
-      <button type="submit" class="btn btn-primary btn-sm d-flex align-items-center gap-2" [disabled]="movimientoForm.invalid">
+      <button type="submit" class="btn btn-primary btn-sm d-flex align-items-center gap-2" [disabled]="gastoForm.invalid">
         <i class="bi bi-save"></i>
-        <span>{{ movimientoSeleccionado() ? 'Actualizar' : 'Guardar' }}</span>
+        <span>{{ gastoSeleccionado() ? 'Actualizar' : 'Guardar' }}</span>
       </button>
 
     </div>
@@ -49,19 +49,4 @@
   </form>
 </div>
 
-@if(infoSemanaActual(); as info) {
-    <div class="text-center mt-4">
-        <h3 class="fs-5 mb-1">
-            Semana {{ info.semana.numSemana }} - 
-            <span class="fw-normal">
-                {{ info.semana.fechaInicio | date:'EEE dd' }} al {{ info.semana.fechaFin | date:'EEE dd' }}
-            </span>
-        </h3>
-        <p class="fs-6 text-muted mb-0">
-            Gasto: <span class="fw-bold">{{ info.gastoTotal | currency:'$':'symbol':'1.2-2' }}</span> - 
-            Límite: <span class="fw-bold">{{ info.limite | currency:'$':'symbol':'1.2-2' }}</span>
-        </p>
-    </div>
-}
-
-<app-detalle-movimientos (editarMovimiento)="onEditarMovimiento($event)" />
+<app-detalle-gastos (editarMovimiento)="onEditarGasto($event)" />

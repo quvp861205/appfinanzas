@@ -65,6 +65,34 @@
     <!-- Sección de desglose semanal -->
     <div class="weekly-breakdown">
       <h3 class="weekly-title">Desglose Semanal de Gastos</h3>
+      
+      <!-- Tarjeta especial para la semana actual -->
+      @if (semanaActual(); as semana) {
+        <div class="week-card current-week-card">
+          <div class="week-header">
+            <span class="week-number">Semana Actual ({{ semana.numSemana }})</span>
+            <span class="week-dates">
+              {{ semana.fechaInicio | date:"EEE d 'de' MMM" }} - {{ semana.fechaFin | date:"EEE d 'de' MMM" }}
+              <span class="week-days">({{ semana.dias }} días)</span>
+            </span>
+          </div>
+          <div class="week-body">
+            <div class="week-item">
+              <span>Gasto:</span>
+              <span class="gasto">{{ semana.gasto | currency:'$':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="week-item">
+              <span>Límite:</span>
+              <span class="limite">{{ semana.gastoLimite | currency:'$':'symbol':'1.2-2' }}</span>
+            </div>
+          </div>
+          <div class="week-footer" [class.positive]="semana.saldo >= 0" [class.negative]="semana.saldo < 0">
+            <span>Saldo:</span>
+            <span class="saldo">{{ semana.saldo | currency:'$':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+      }
+
       <div class="weekly-grid">
         @for (semana of semanas(); track semana.numSemana) {
           <div class="week-card" [class.semana-actual]="esSemanaActual(semana)">

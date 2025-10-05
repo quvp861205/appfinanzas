@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -18,7 +18,40 @@ export class IngresosComponent {
   private ingresosService = inject(IngresosService);
   private dialogRef = inject(MatDialogRef<IngresosComponent>);
 
-  ingresos = this.ingresosService.ingresos;
+  private todosLosIngresos = this.ingresosService.ingresos;
+  
+  // Señales para los filtros
+  mostrarTodos = signal(false);
+  selectedYear = signal(new Date().getFullYear());
+
+  // Opciones para el selector de año (del actual hasta 2050)
+  yearOptions = Array.from({ length: 2051 - new Date().getFullYear() }, (_, i) => new Date().getFullYear() + i);
+
+  ingresos = computed(() => {
+    const allIngresos = this.todosLosIngresos();
+    const year = this.selectedYear();
+
+    // 1. Filtrar por el año seleccionado
+    const ingresosDelAnio = allIngresos.filter(ingreso => {
+      // Ajuste para fechas de Firebase que pueden no ser objetos Date
+      const ingresoYear = new Date(ingreso.fecha).getFullYear();
+      return ingresoYear === year;
+    });
+
+    // 2. Si "Todos" no está activo, filtrar por el mes actual
+    if (!this.mostrarTodos()) {
+      const hoy = new Date();
+      const currentMonth = hoy.getMonth(); // 0-11
+
+      return ingresosDelAnio.filter(ingreso => {
+        const ingresoMonth = new Date(ingreso.fecha).getMonth();
+        return ingresoMonth === currentMonth;
+      });
+    }
+
+    // 3. Si "Todos" está activo, devolver todos los del año
+    return ingresosDelAnio;
+  });
 
   ingresoForm = this.fb.group({
     monto: ['', [Validators.required, Validators.min(0.01)]],
@@ -26,20 +59,23 @@ export class IngresosComponent {
     fecha: [new Date().toISOString().substring(0, 10), Validators.required]
   });
 
-  /**
-   * Compara si la fecha de un ingreso corresponde al mes y año actual.
-   * Esta función compara directamente los números del año y mes para evitar
-   * problemas relacionados con la zona horaria (timezone).
-   */
+  onMostrarTodosChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.mostrarTodos.set(target.checked);
+  }
+
+  onYearChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    this.selectedYear.set(Number(target.value));
+  }
+
   esMesActual(fecha: string): boolean {
     const hoy = new Date();
     const currentYear = hoy.getFullYear();
-    const currentMonth = hoy.getMonth() + 1; // getMonth() es base 0 (0-11)
+    const currentMonth = hoy.getMonth() + 1;
 
-    // La fecha del ingreso viene en formato 'YYYY-MM-DD'
     const [ingresoYear, ingresoMonth] = fecha.split('-').map(Number);
 
-    // Se retorna la comparación directa de los valores numéricos.
     return currentYear === ingresoYear && currentMonth === ingresoMonth;
   }
 

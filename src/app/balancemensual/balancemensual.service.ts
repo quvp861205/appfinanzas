@@ -1,6 +1,6 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { IngresosService } from '../ingresos/ingresos.service';
-import { MovimientoService } from '../movimientos/services/movimiento.service';
+import { GastoService } from '../gastos/services/gastos.service';
 import { MsiService } from '../msi/msi.service';
 
 @Injectable({
@@ -8,16 +8,16 @@ import { MsiService } from '../msi/msi.service';
 })
 export class BalanceMensualService {
   private ingresosService = inject(IngresosService);
-  private movimientoService = inject(MovimientoService);
+  private gastoService = inject(GastoService);
   private msiService = inject(MsiService);
 
   private ingresos = this.ingresosService.ingresos;
-  private movimientos = this.movimientoService.movimientos;
+  private gastos = this.gastoService.gastos;
   private msi = this.msiService.msi;
 
   public balanceMensual = computed(() => {
     const ingresosPorMes = this.groupFinancialDataByMonth(this.ingresos());
-    const gastosPorMes = this.groupFinancialDataByMonth(this.movimientos());
+    const gastosPorMes = this.groupFinancialDataByMonth(this.gastos());
     const msiPorMes = this.groupFinancialDataByMonth(this.msi());
 
     const allMonths = new Set([...ingresosPorMes.keys(), ...gastosPorMes.keys(), ...msiPorMes.keys()]);

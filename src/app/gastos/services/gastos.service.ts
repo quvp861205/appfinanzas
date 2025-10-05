@@ -1,12 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Database, ref, push, listVal, remove, update, query } from '@angular/fire/database';
-import { limitToLast } from 'firebase/database';
-import { EMPTY, of } from 'rxjs';
+import { limitToLast, orderByChild } from 'firebase/database';
+import { EMPTY, of, combineLatest } from 'rxjs';
 import { map, catchError, tap, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 
-export interface Movimiento {
+export interface Gasto {
   id?: string;
   monto: number;
   descripcion: string;
@@ -16,38 +16,42 @@ export interface Movimiento {
 @Injectable({
   providedIn: 'root'
 })
-export class MovimientoService {
+export class GastoService {
   private db = inject(Database);
   private authService = inject(AuthService);
 
-  private movimientosSignal = signal<Movimiento[]>([]);
-  public movimientos = this.movimientosSignal.asReadonly();
+  private gastosSignal = signal<Gasto[]>([]);
+  public gastos = this.gastosSignal.asReadonly();
+  private limit = signal(30);
 
   constructor() {
-    // Para reaccionar a los cambios de sesión (login/logout), convertimos el 
-    // signal del uid a un observable.
-    toObservable(this.authService.uid$).pipe(
-      switchMap(uid => {
+    const uid$ = toObservable(this.authService.uid$);
+    const limit$ = toObservable(this.limit);
+
+    combineLatest([uid$, limit$]).pipe(
+      switchMap(([uid, limit]) => {
         if (uid) {
-          // Si hay un uid, conectamos al stream de sus movimientos.
-          return this.conectarAStreamDeMovimientos(uid);
+          return this.conectarAStreamDeMovimientos(uid, limit);
         } else {
-          // Si no hay uid, vaciamos la lista de movimientos.
-          this.movimientosSignal.set([]);
+          this.gastosSignal.set([]);
           return of(null);
         }
       })
     ).subscribe();
   }
 
-  private conectarAStreamDeMovimientos(uid: string) {
+  setLimit(newLimit: number): void {
+    this.limit.set(newLimit);
+  }
+
+  private conectarAStreamDeMovimientos(uid: string, limit: number) {
     const userMovimientosRef = ref(this.db, `gastos/${uid}`);
-    const movimientosQuery = query(userMovimientosRef, limitToLast(100));
+    const movimientosQuery = query(userMovimientosRef, orderByChild('fecha'), limitToLast(limit));
     
-    return listVal<Movimiento>(movimientosQuery, { keyField: 'id' }).pipe(
+    return listVal<Gasto>(movimientosQuery, { keyField: 'id' }).pipe(
       map(movimientos => [...movimientos].sort((a, b) => b.fecha.localeCompare(a.fecha))),
       tap(movimientos => {
-        this.movimientosSignal.set(movimientos);
+        this.gastosSignal.set(movimientos);
       }),
       catchError(err => {
         console.error('Servicio: Error en el stream de gastos:', err);
@@ -56,7 +60,7 @@ export class MovimientoService {
     );
   }
 
-  async agregarMovimiento(movimiento: Omit<Movimiento, 'id'>): Promise<void> {
+  async agregarGasto(movimiento: Omit<Gasto, 'id'>): Promise<void> {
     const uid = this.authService.getUID();
     if (uid) {
       const userMovimientosRef = ref(this.db, `gastos/${uid}`);
@@ -67,7 +71,7 @@ export class MovimientoService {
     }
   }
 
-  async actualizarMovimiento(id: string, movimiento: Partial<Movimiento>): Promise<void> {
+  async actualizarGasto(id: string, movimiento: Partial<Gasto>): Promise<void> {
     const uid = this.authService.getUID();
     if (uid) {
         const movimientoRef = ref(this.db, `gastos/${uid}/${id}`);
@@ -76,7 +80,7 @@ export class MovimientoService {
     throw new Error("User not authenticated");
   }
 
-  async eliminarMovimiento(id: string): Promise<void> {
+  async eliminarGasto(id: string): Promise<void> {
     const uid = this.authService.getUID();
      if (uid) {
         const movimientoRef = ref(this.db, `gastos/${uid}/${id}`);

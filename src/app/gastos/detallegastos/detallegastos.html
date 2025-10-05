@@ -1,0 +1,58 @@
+<div class="movimientos-container">
+    <h3 class="text-center my-4">Historial de Gastos</h3>
+
+    <div class="row mb-3 align-items-center mx-3">
+      <div class="col-auto">
+        <label for="limit" class="col-form-label">Mostrar:</label>
+      </div>
+      <div class="col-auto">
+        <select id="limit" class="form-select" 
+                [value]="limit()" 
+                (change)="onLimitChange($event)" 
+                [disabled]="!mostrarTodos()">
+          @for (option of limitOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-auto">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="mostrarTodosCheck" 
+                 [checked]="mostrarTodos()" 
+                 (change)="onMostrarTodosChange($event)">
+          <label class="form-check-label" for="mostrarTodosCheck">
+            Todos
+          </label>
+        </div>
+      </div>
+    </div>
+
+    @if (gastoSemanal() > 0) {
+      <div class="gasto-semanal-summary card mb-3 mx-3">
+        <div class="card-body">
+          <h5 class="card-title">Gasto de la Semana</h5>
+          <p class="card-text display-6 text-danger fw-bold">{{ gastoSemanal() | currency:'MXN':'symbol':'1.2-2' }}</p>
+        </div>
+      </div>
+    }
+  
+    <ul class="list-group">
+      @for (movimiento of movimientos(); track movimiento.id) {
+        <li class="list-group-item d-flex justify-content-between align-items-center gasto mx-1" [class.semana-actual]="esSemanaActual(movimiento.fecha)">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-arrow-up-circle-fill me-3 fs-4"></i>
+            <div class="flex-grow-1">
+              <div class="fw-bold">{{ movimiento.descripcion }}</div>
+              <small class="text-muted">{{ movimiento.fecha | date:"EEE d 'de' MMM" }}</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <span class="badge bg-danger rounded-pill me-3 fs-6">{{ movimiento.monto | currency:'MXN':'symbol':'1.2-2' }}</span>
+            <button class="btn btn-outline-primary btn-sm" (click)="onEditar(movimiento)">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>

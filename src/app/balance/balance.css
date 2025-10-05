@@ -112,6 +112,39 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilos para la tarjeta dorada de la semana actual */
+.current-week-card {
+  background: linear-gradient(135deg, #fff9c4, #fce883); /* Gradiente dorado suave */
+  color: #424242; /* Texto más oscuro para contraste */
+  border-left: 4px solid #fbc02d; /* Borde dorado más intenso */
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.5rem; /* Espacio antes de la cuadrícula de semanas */
+}
+
+.current-week-card .week-header,
+.current-week-card .week-body,
+.current-week-card .week-footer {
+  padding: 0.75rem 1rem; /* Padding consistente para las secciones internas */
+}
+
+.current-week-card .week-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.current-week-card .week-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.current-week-card .week-number {
+  font-weight: 600; /* Hacemos el número de semana más prominente */
+  color: #333;
+}
+
+.current-week-card .week-dates {
+  color: #555;
+}
+
 .week-header {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #eee;

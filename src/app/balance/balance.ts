@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IngresosService, Ingreso } from '../ingresos/ingresos.service';
-import { MovimientoService, Movimiento } from '../movimientos/services/movimiento.service';
+import { BalanceService, Movimiento } from '../balance/balance.service';
 import { MsiService, MsiRecord } from '../msi/msi.service';
 import { FormsModule } from '@angular/forms';
 
@@ -28,7 +28,7 @@ export interface Semana {
 export class Balance {
   private dialogRef = inject(MatDialogRef<Balance>);
   private ingresosService = inject(IngresosService);
-  private movimientoService = inject(MovimientoService);
+  private movimientoService = inject(BalanceService);
   private msiService = inject(MsiService);
 
   selectedDate = signal(new Date().toISOString().split('T')[0]);
@@ -63,6 +63,17 @@ export class Balance {
   saldoFinal = computed(() => this.ingresoTotalDelMes() - this.gastoTotalDelMes());
 
   semanas = computed(() => this.calcularSemanas(this.selectedDate()));
+
+  semanaActual = computed(() => {
+    const hoy = new Date();
+    const fechaSeleccionada = new Date(this.selectedDate() + 'T00:00:00');
+    
+    // Solo muestra la tarjeta de la semana actual si el mes y año seleccionados son los actuales
+    if (hoy.getFullYear() !== fechaSeleccionada.getFullYear() || hoy.getMonth() !== fechaSeleccionada.getMonth()) {
+      return null;
+    }
+    return this.semanas().find(semana => this.esSemanaActual(semana)) || null;
+  });
 
   esSemanaActual(semana: Semana): boolean {
     const hoy = new Date();

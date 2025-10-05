@@ -15,25 +15,19 @@
           <h5 class="card-title mb-3">Registrar Nuevo Ingreso</h5>
 
           <form [formGroup]="ingresoForm" (ngSubmit)="guardarIngreso()">
-            <!-- Campo Monto -->
+            <!-- ... campos del formulario ... -->
             <div class="mb-3">
               <label for="monto" class="form-label">Monto</label>
               <input type="number" id="monto" class="form-control" formControlName="monto" placeholder="Ej: 50000">
             </div>
-
-            <!-- Campo Descripción -->
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripción</label>
               <input type="text" id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ej: Salario quincena">
             </div>
-
-            <!-- Campo Fecha -->
             <div class="mb-3">
               <label for="fecha" class="form-label">Fecha</label>
               <input type="date" id="fecha" class="form-control" formControlName="fecha">
             </div>
-
-            <!-- Botón Guardar -->
             <div class="d-grid">
               <button type="submit" class="btn btn-primary" [disabled]="ingresoForm.invalid">Guardar Ingreso</button>
             </div>
@@ -45,21 +39,42 @@
       <div class="card shadow-sm mx-3">
         <div class="card-body">
           <h5 class="card-title mb-3">Mis Ingresos</h5>
+
+          <!-- Filtros -->
+          <div class="row gx-3 gy-2 align-items-center mb-3 px-2">
+            <div class="col-auto">
+              <label for="year-select" class="col-form-label">Año:</label>
+            </div>
+            <div class="col-auto">
+              <select id="year-select" class="form-select" [value]="selectedYear()" (change)="onYearChange($event)">
+                @for (year of yearOptions; track year) {
+                  <option [value]="year">{{ year }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-auto">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="mostrarTodosIngresos"
+                       [checked]="mostrarTodos()"
+                       (change)="onMostrarTodosChange($event)">
+                <label class="form-check-label" for="mostrarTodosIngresos">Mostrar todos los del año</label>
+              </div>
+            </div>
+          </div>
+
           @if (ingresos().length > 0) {
             <ul class="list-group list-group-flush">
               @for (item of ingresos(); track item.id) {
                 <li class="list-group-item" [class.mes-actual]="esMesActual(item.fecha)">
-                  <!-- Fila superior: Descripción y Monto -->
+                  <!-- ... contenido de la lista ... -->
                   <div class="d-flex justify-content-between align-items-center">
                     <span class="fw-bold flex-grow-1 me-3">{{ item.descripcion }}</span>
-                    <span class="text-nowrap fw-medium">{{ item.monto | currency:'$':'symbol':'1.2-2' }}</span>
+                    <span class="text-nowrap fw-medium">{{ item.monto | currency:'MXN':'symbol':'1.2-2' }}</span>
                   </div>
-                  <!-- Fila inferior: Fecha y Botón de Eliminar -->
                   <div class="d-flex justify-content-between align-items-center mt-1">
                     @if (item.fecha) {
-                      <small class="text-muted">{{ item.fecha | date:"EEE d 'de' MMM" }}</small>
+                      <small class="text-muted">{{ item.fecha | date:"MMM d, y" }}</small>
                     } @else {
-                      <!-- Placeholder para mantener la alineación si no hay fecha -->
                       <div></div>
                     }
                     <button class="btn btn-sm text-danger" (click)="eliminarIngreso(item.id!)" aria-label="Eliminar ingreso">
@@ -70,7 +85,7 @@
               }
             </ul>
           } @else {
-            <p class="text-center text-muted">No tienes ingresos registrados.</p>
+            <p class="text-center text-muted mt-4">No hay ingresos para mostrar con los filtros seleccionados.</p>
           }
         </div>
       </div>

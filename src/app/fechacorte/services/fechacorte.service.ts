@@ -1,7 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Database, objectVal, ref, set } from '@angular/fire/database';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Database, ref, set, get } from '@angular/fire/database';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
@@ -14,24 +12,21 @@ export class FechacorteService {
   constructor() { }
 
   guardarFechaCorte(fecha: string): Promise<void> {
-    const user = this.authService.currentUser();
-    if (!user) {
+    const uid = this.authService.getUID();
+    if (!uid) {
       return Promise.reject('User not authenticated');
     }
-    const fechaCorteRef = ref(this.db, `fechacorte/${user.uid}`);
+    const fechaCorteRef = ref(this.db, `fechacorte/${uid}`);
     return set(fechaCorteRef, fecha);
   }
 
-  getFechaCorte(): Observable<string | null> {
-    return this.authService.user$.pipe(
-      switchMap(user => {
-        if (user) {
-          const fechaCorteRef = ref(this.db, `fechacorte/${user.uid}`);
-          return objectVal<string>(fechaCorteRef);
-        } else {
-          return of(null);
-        }
-      })
-    );
+  async getFechaCorte(): Promise<string | null> {
+    const uid = this.authService.getUID();
+    if (!uid) {
+      return null;
+    }
+    const fechaCorteRef = ref(this.db, `fechacorte/${uid}`);
+    const snapshot = await get(fechaCorteRef);
+    return snapshot.exists() ? snapshot.val() : null;
   }
 }

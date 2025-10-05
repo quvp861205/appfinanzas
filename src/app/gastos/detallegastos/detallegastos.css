@@ -64,3 +64,9 @@
 .semana-actual {
   background-color: #e3f2fd; /* O un color claro de tu preferencia */
 }
+
+.gasto-semanal-summary {
+  background-color: #fff3e0; /* Un color naranja muy claro */
+  border-left: 5px solid #ff9800; /* Borde naranja */
+  text-align: center;
+}

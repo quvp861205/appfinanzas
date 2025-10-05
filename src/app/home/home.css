@@ -12,7 +12,7 @@
   box-sizing: border-box;
 }
 
-.login-container {
+.welcome-container {
   max-width: 600px;
   padding: 3rem;
   background: rgba(255, 255, 255, 0.1);
@@ -30,57 +30,48 @@
 }
 
 .app-title {
-  font-size: 2.8rem;
+  font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .app-subtitle {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 300;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   opacity: 0.9;
 }
 
-.btn-google {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.7rem 2rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #ddd;
+.btn-login {
+  padding: 0.8rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #ff6b6b;
+  border: none;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
 }
 
-.btn-google img {
-  width: 20px;
-  height: 20px;
-  margin-right: 12px;
-}
-
-.btn-google:hover {
-  transform: translateY(-2px);
-  background-color: #f7f7f7;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+.btn-login:hover {
+  transform: translateY(-3px);
+  background-color: #ff4757;
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
 }
 
 @media (max-width: 768px) {
   .app-title {
-    font-size: 2.4rem;
+    font-size: 2.8rem;
   }
 
   .app-subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
-  .login-container {
-    padding: 2.5rem;
+  .welcome-container {
+    padding: 2rem;
   }
 }

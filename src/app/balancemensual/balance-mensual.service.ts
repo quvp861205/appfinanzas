@@ -1,6 +1,6 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { IngresosService } from '../ingresos/ingresos.service';
-import { MovimientoService } from '../movimientos/services/movimiento.service';
+import { BalanceService, Movimiento } from '../balance/balance.service';
 import { MsiService } from '../msi/msi.service';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { MsiService } from '../msi/msi.service';
 })
 export class BalanceMensualService {
   private ingresosService = inject(IngresosService);
-  private movimientoService = inject(MovimientoService);
+  private movimientoService = inject(BalanceService);
   private msiService = inject(MsiService);
 
   private ingresos = this.ingresosService.ingresos;
