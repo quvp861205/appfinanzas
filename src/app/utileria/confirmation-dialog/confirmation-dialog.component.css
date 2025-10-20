@@ -1,0 +1,60 @@
+.dialog-container {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dialog-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.dialog-content p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  color: white;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.confirm-button {
+  background-color: #0d6efd; /* Azul sólido */
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cancel-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}

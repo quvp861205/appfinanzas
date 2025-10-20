@@ -5,6 +5,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MsiService, MsiRecord } from './msi.service';
+import { NotificationService } from '../utileria/notification.service';
+import { ConfirmationDialogService } from '../utileria/confirmation-dialog/confirmation-dialog.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-msi',
@@ -17,6 +20,8 @@ export class Msi {
   private fb = inject(FormBuilder);
   private msiService = inject(MsiService);
   private dialogRef = inject(MatDialogRef<Msi>);
+  private notificationService = inject(NotificationService);
+  private confirmationDialogService = inject(ConfirmationDialogService);
 
   private allMsiRecords = this.msiService.msi;
   
@@ -67,29 +72,22 @@ export class Msi {
     const desc = this.selectedDescription();
     const date = this.selectedDate();
 
-    // If a date is selected, it takes precedence.
     if (date) {
-      // Filter by date first.
       const dateRecords = records.filter(r => r.fecha === date);
-      // If a description is also selected, filter further. Otherwise, return all for that date.
       if (desc && desc !== 'all') {
         return dateRecords.filter(r => r.descripcion === desc);
       }
       return dateRecords; 
     }
 
-    // If no date, but a description is selected.
     if (desc) {
       if (desc === 'all') {
-        // Show all records that belong to the currently visible descriptions.
         const visibleDescriptions = this.uniqueDescriptions();
         return records.filter(r => visibleDescriptions.includes(r.descripcion));
       }
-      // Show records for the specific description.
       return records.filter(r => r.descripcion === desc);
     }
 
-    // If no filters are selected, return empty.
     return [];
   });
 
@@ -122,20 +120,28 @@ export class Msi {
     }
 
     const formValue = this.msiForm.getRawValue();
+
+    // Formatear la descripción como se solicitó
+    const date = new Date(formValue.fecha! + 'T00:00:00');
+    const monthAbbreviations = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const month = monthAbbreviations[date.getMonth()];
+    const year = date.getFullYear().toString().slice(-2);
+    const newDescription = `${formValue.descripcion!} ${month}${year} ${formValue.meses!}m`;
+
     try {
       await this.msiService.createMsiRecords({
         monto: formValue.monto!,
-        descripcion: formValue.descripcion!,
+        descripcion: newDescription, // Usamos la nueva descripción
         fecha: formValue.fecha!,
         meses: formValue.meses!
       });
-      alert('Se ha guardado con exito.');
+      this.notificationService.show('Se ha guardado con éxito.');
       this.msiForm.reset();
       this.selectedDescription.set('');
       this.selectedDate.set('');
     } catch (error) {
       console.log("Error al guardar gasto fijo", error);
-      alert('Hubo un error al guardar el gasto fijo.');
+      this.notificationService.show('Hubo un error al guardar el gasto fijo.', true);
     }
   }
 
@@ -149,17 +155,19 @@ export class Msi {
     this.selectedDate.set(inputElement.value);
   }
 
-  async onDelete(description: string): Promise<void> {
-    if (confirm(`¿Estás seguro de que quieres eliminar todos los registros para \"${description}\"?`)) {
-      try {
-        await this.msiService.deleteMsiByDescription(description);
-        alert('Se han eliminado con exito.');
-
-      } catch (error) {
-        console.log("Error eliminar gastos fijos", error);
-        alert('Hubo un error al eliminar los gastos fijos.');
-      }
-    }
+  onDelete(description: string): void {
+    const message = `¿Estás seguro de que quieres eliminar todos los registros para "${description}"?`;
+    this.confirmationDialogService.open(message)
+      .pipe(filter(confirmed => confirmed))
+      .subscribe(async () => {
+        try {
+          await this.msiService.deleteMsiByDescription(description);
+          this.notificationService.show('Se han eliminado con éxito.');
+        } catch (error) {
+          console.log("Error eliminar gastos fijos", error);
+          this.notificationService.show('Hubo un error al eliminar los gastos fijos.', true);
+        }
+      });
   }
   
   trackByRecordId(index: number, record: MsiRecord): string | undefined {
@@ -169,6 +177,6 @@ export class Msi {
   onVerAntiguosChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     this.verAntiguos.set(checkbox.checked);
-    this.selectedDescription.set(''); // Reset description filter when changing view
+    this.selectedDescription.set('');
   }
 }

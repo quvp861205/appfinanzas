@@ -1,0 +1,56 @@
+/* src/app/dialog-styles.css */
+
+/* Fondo para el diálogo de Ingresos */
+.dialog-bg-1 .mdc-dialog__surface {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(173, 216, 230, 0.1) 10px,
+    rgba(173, 216, 230, 0.1) 20px
+  ) !important;
+}
+
+/* Fondo para el diálogo de Gastos Fijos (MSI) */
+.dialog-bg-2 .mdc-dialog__surface {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(173, 216, 230, 0.15) 10px,
+    rgba(173, 216, 230, 0.15) 20px
+  ) !important;
+}
+
+/* Fondo para el diálogo de Balance */
+.dialog-bg-3 .mdc-dialog__surface {
+  background-image: repeating-linear-gradient(
+    -30deg,
+    transparent,
+    transparent 12px,
+    rgba(173, 216, 230, 0.12) 12px,
+    rgba(173, 216, 230, 0.12) 24px
+  ) !important;
+}
+
+/* Fondo para el diálogo de Balance Mensual */
+.dialog-bg-4 .mdc-dialog__surface {
+  background-image: repeating-linear-gradient(
+    30deg,
+    transparent,
+    transparent 12px,
+    rgba(173, 216, 230, 0.18) 12px,
+    rgba(173, 216, 230, 0.18) 24px
+  ) !important;
+}
+
+/* Fondo para el diálogo de Resumen de Gastos Fijos */
+.dialog-bg-5 .mdc-dialog__surface {
+  background-image: repeating-linear-gradient(
+    -60deg,
+    transparent,
+    transparent 15px,
+    rgba(173, 216, 230, 0.14) 15px,
+    rgba(173, 216, 230, 0.14) 30px
+  ) !important;
+}

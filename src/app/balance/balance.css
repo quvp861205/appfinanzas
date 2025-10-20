@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh; /* Ocupa toda la altura de la ventana */
   width: 100vw; /* Ocupa todo el ancho de la ventana */
-  background-color: #f8f9fa;
+  background-color: transparent; /* <-- ¡Este es el cambio! */
 }
 
 .dialog-header {
@@ -11,8 +11,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background-color: #0d6efd; /* Azul primario */
   color: white;
+  background-image: linear-gradient(45deg, #0d6efd, #0dcaf0);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
 }
 
@@ -20,6 +22,7 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 500;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .dialog-content {
@@ -78,8 +81,26 @@
 }
 
 .expense-card {
-  background-color: #fff;
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  color: #b71c1c;
 }
+
+.expense-card .card-title {
+  font-weight: 500;
+}
+
+.expense-card .text-muted {
+  color: #d32f2f !important; /* Override bootstrap's text-muted color for this card */
+}
+
+.expense-card hr {
+  border-top: 1px solid rgba(183, 28, 28, 0.2);
+}
+
+.expense-card .fw-bolder {
+    color: #b71c1c;
+}
+
 
 .weekly-breakdown {
   margin-top: 2rem;

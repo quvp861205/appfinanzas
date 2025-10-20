@@ -5,6 +5,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IngresosService, Ingreso } from './ingresos.service';
+import { NotificationService } from '../utileria/notification.service';
+import { ConfirmationDialogService } from '../utileria/confirmation-dialog/confirmation-dialog.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ingresos',
@@ -17,31 +20,28 @@ export class IngresosComponent {
   private fb = inject(FormBuilder);
   private ingresosService = inject(IngresosService);
   private dialogRef = inject(MatDialogRef<IngresosComponent>);
+  private notificationService = inject(NotificationService);
+  private confirmationDialogService = inject(ConfirmationDialogService);
 
   private todosLosIngresos = this.ingresosService.ingresos;
   
-  // Señales para los filtros
   mostrarTodos = signal(false);
   selectedYear = signal(new Date().getFullYear());
 
-  // Opciones para el selector de año (del actual hasta 2050)
   yearOptions = Array.from({ length: 2051 - new Date().getFullYear() }, (_, i) => new Date().getFullYear() + i);
 
   ingresos = computed(() => {
     const allIngresos = this.todosLosIngresos();
     const year = this.selectedYear();
 
-    // 1. Filtrar por el año seleccionado
     const ingresosDelAnio = allIngresos.filter(ingreso => {
-      // Ajuste para fechas de Firebase que pueden no ser objetos Date
       const ingresoYear = new Date(ingreso.fecha).getFullYear();
       return ingresoYear === year;
     });
 
-    // 2. Si "Todos" no está activo, filtrar por el mes actual
     if (!this.mostrarTodos()) {
       const hoy = new Date();
-      const currentMonth = hoy.getMonth(); // 0-11
+      const currentMonth = hoy.getMonth();
 
       return ingresosDelAnio.filter(ingreso => {
         const ingresoMonth = new Date(ingreso.fecha).getMonth();
@@ -49,7 +49,6 @@ export class IngresosComponent {
       });
     }
 
-    // 3. Si "Todos" está activo, devolver todos los del año
     return ingresosDelAnio;
   });
 
@@ -73,9 +72,7 @@ export class IngresosComponent {
     const hoy = new Date();
     const currentYear = hoy.getFullYear();
     const currentMonth = hoy.getMonth() + 1;
-
     const [ingresoYear, ingresoMonth] = fecha.split('-').map(Number);
-
     return currentYear === ingresoYear && currentMonth === ingresoMonth;
   }
 
@@ -85,42 +82,52 @@ export class IngresosComponent {
 
   async guardarIngreso() {
     if (this.ingresoForm.invalid) {
+      this.ingresoForm.markAllAsTouched();
       return;
     }
 
     const formValue = this.ingresoForm.getRawValue();
+
+    // Formatear la descripción como se solicitó
+    const date = new Date(formValue.fecha! + 'T00:00:00');
+    const monthAbbreviations = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const month = monthAbbreviations[date.getMonth()];
+    const year = date.getFullYear().toString().slice(-2);
+    const newDescription = `${formValue.descripcion!} ${month}${year}`;
+
     const nuevoIngreso: Omit<Ingreso, 'id'> = {
       monto: Number(formValue.monto),
-      descripcion: formValue.descripcion!,
+      descripcion: newDescription, // Usamos la nueva descripción
       fecha: formValue.fecha!,
     };
 
     try {
       await this.ingresosService.addIngreso(nuevoIngreso);
-      alert('Se ha guardado con exito.');
+      this.notificationService.show('Se ha guardado con éxito.');
       this.ingresoForm.reset({
         monto: '',
         descripcion: '',
         fecha: new Date().toISOString().substring(0, 10)
       });
-      
     } catch (error) {
       console.error('Error al guardar el ingreso:', error);
-      alert('Hubo un error al guardar el ingreso.');
+      this.notificationService.show('Hubo un error al guardar el ingreso.', true);
     }
   }
 
-  async eliminarIngreso(id: string | undefined) {
+  eliminarIngreso(id: string | undefined) {
     if (!id) return;
 
-    if (confirm('¿Estás seguro de que deseas eliminar este ingreso?')) {
-      try {
-        await this.ingresosService.deleteIngreso(id);
-        alert('Se ha eliminado con exito.');
-      } catch (error) {
-        console.error('Error al eliminar el ingreso:', error);
-        alert('Hubo un error al eliminar el ingreso.');
-      }
-    }
+    this.confirmationDialogService.open('¿Estás seguro de que deseas eliminar este ingreso?')
+      .pipe(filter(confirmed => confirmed))
+      .subscribe(async () => {
+        try {
+          await this.ingresosService.deleteIngreso(id!);
+          this.notificationService.show('Se ha eliminado con éxito.');
+        } catch (error) {
+          console.error('Error al eliminar el ingreso:', error);
+          this.notificationService.show('Hubo un error al eliminar el ingreso.', true);
+        }
+      });
   }
 }

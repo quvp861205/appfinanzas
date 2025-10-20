@@ -5,6 +5,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 import { AuthService } from './auth/services/auth.service';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { NotificationComponent } from './utileria/notification/notification';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import { SplashScreen } from '@capacitor/splash-screen';
   imports: [
     CommonModule,
     RouterOutlet,
-    MatDialogModule
+    MatDialogModule,
+    NotificationComponent
   ],
 })
 export class AppComponent {
@@ -40,7 +42,7 @@ export class AppComponent {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
-      panelClass: 'full-screen-dialog',
+      panelClass: ['full-screen-dialog', 'dialog-bg-1'],
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms'
     });
@@ -52,7 +54,7 @@ export class AppComponent {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
-      panelClass: 'full-screen-dialog',
+      panelClass: ['full-screen-dialog', 'dialog-bg-2'],
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms'
     });
@@ -76,7 +78,7 @@ export class AppComponent {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
-      panelClass: 'full-screen-dialog',
+      panelClass: ['full-screen-dialog', 'dialog-bg-3'],
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms'
     });
@@ -88,7 +90,7 @@ export class AppComponent {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
-      panelClass: 'full-screen-dialog',
+      panelClass: ['full-screen-dialog', 'dialog-bg-4'],
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms'
     });
@@ -100,7 +102,7 @@ export class AppComponent {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
-      panelClass: 'full-screen-dialog',
+      panelClass: ['full-screen-dialog', 'dialog-bg-5'],
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms'
     });

@@ -38,7 +38,7 @@
   
     <ul class="list-group">
       @for (movimiento of movimientos(); track movimiento.id) {
-        <li class="list-group-item d-flex justify-content-between align-items-center gasto mx-1" [class.semana-actual]="esSemanaActual(movimiento.fecha)">
+        <li class="list-group-item movimiento-item d-flex justify-content-between align-items-center gasto mx-1" [class.semana-actual]="esSemanaActual(movimiento.fecha)">
           <div class="d-flex align-items-center">
             <i class="bi bi-arrow-up-circle-fill me-3 fs-4"></i>
             <div class="flex-grow-1">

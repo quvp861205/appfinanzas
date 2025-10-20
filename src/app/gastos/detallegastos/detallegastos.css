@@ -1,72 +1,118 @@
+/* --- INICIO DE LA CORRECCIÓN --- */
+
+/* Hacemos transparente el contenedor principal y la lista */
+.movimientos-container,
+.list-group {
+  background-color: transparent !important;
+}
+
+/* --- FIN DE LA CORRECCIÓN --- */
+
+
 /* Estilos para cada elemento de la lista de movimientos */
 .movimiento-item {
   transition: all 0.3s ease-in-out;
   border-left: 5px solid transparent;
+  /* Efecto de vidrio esmerilado para un look moderno */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* Se elimina el fondo base para que los RGBA funcionen sobre transparencia */
+  background-color: transparent;
 }
 
 .movimiento-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Estilo para los movimientos de tipo INGRESO */
+/* Estilo para los movimientos de tipo INGRESO con transparencia */
 .movimiento-item.ingreso {
-  background-color: #e8f5e9; /* Un verde claro y suave */
-  border-left-color: #4CAF50; /* Un verde más oscuro para el borde */
+  background-color: rgba(232, 245, 233, 0.5); /* Verde claro con 50% de opacidad */
+  border-left-color: #4CAF50;
 }
 
 .movimiento-item.ingreso .bi-arrow-down-circle-fill {
-  color: #4CAF50; /* Icono verde */
+  color: #4CAF50;
 }
 
-/* Estilo para los movimientos de tipo GASTO */
+/* Estilo para los movimientos de tipo GASTO con transparencia */
 .movimiento-item.gasto {
-  background-color: #ffebee; /* Un rojo claro y suave */
-  border-left-color: #f44336; /* Un rojo más oscuro para el borde */
+  background-image: linear-gradient(
+    90deg, /* Dirección del gradiente: de izquierda a derecha */
+    rgba(255, 235, 238, 0.4), /* Primer color (tu color base semitransparente) */
+    rgba(255, 200, 200, 0.6)  /* Segundo color (un rojo un poco más oscuro y opaco) */
+  );
+  border-left-color: #f44336;
 }
 
 .movimiento-item.gasto .bi-arrow-up-circle-fill {
-  color: #f44336; /* Icono rojo */
+  color: #f44336;
 }
 
-/* Estilo para el botón de editar */
-.btn-outline-secondary {
-    color: #6c757d;
-    border-color: #6c757d;
+/* Estilo para los botones de editar, asegurando visibilidad */
+.movimiento-item .btn-outline-primary {
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #333;
 }
 
-.btn-outline-secondary:hover {
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
+.movimiento-item .btn-outline-primary:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-.movimiento-item.ingreso .btn-outline-light {
-  border-color: #a5d6a7;
-  color: #388e3c;
-}
-
-.movimiento-item.ingreso .btn-outline-light:hover {
-  background-color: #4CAF50;
-  color: #fff;
-}
-
-.movimiento-item.gasto .btn-outline-light {
-  border-color: #ef9a9a;
-  color: #d32f2f;
-}
-
-.movimiento-item.gasto .btn-outline-light:hover {
-  background-color: #f44336;
-  color: #fff;
-}
-
+/* Semana actual con gradiente azul y transparencia */
 .semana-actual {
-  background-color: #e3f2fd; /* O un color claro de tu preferencia */
+  background: linear-gradient(135deg, rgba(227, 242, 253, 0.4), rgba(187, 222, 251, 0.4));
+  border-left-color: #1976d2;
+  color: #0d47a1; /* Texto azul oscuro para contraste */
 }
 
+.semana-actual .fw-bold,
+.semana-actual .badge {
+  color: #0d47a1;
+}
+
+.semana-actual .text-muted {
+  color: #1565c0 !important;
+}
+
+.semana-actual .bi-arrow-up-circle-fill {
+  color: #1976d2;
+}
+
+.semana-actual .badge {
+  background-color: rgba(227, 242, 253, 0.8) !important;
+  border: 1px solid rgba(13, 71, 161, 0.2);
+}
+
+/* Tarjeta de resumen semanal con efecto de vidrio */
 .gasto-semanal-summary {
-  background-color: #fff3e0; /* Un color naranja muy claro */
-  border-left: 5px solid #ff9800; /* Borde naranja */
+  background: linear-gradient(
+    135deg, 
+    rgba(13, 202, 240, 0.4), 
+    rgba(13, 110, 253, 0.4) 
+  );
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   text-align: center;
+  transition: all 0.3s ease;
+  /* Efecto de vidrio esmerilado */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.gasto-semanal-summary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.gasto-semanal-summary .card-title {
+  color: white;
+  font-weight: 500;
+}
+
+.gasto-semanal-summary .card-text {
+  color: white !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }

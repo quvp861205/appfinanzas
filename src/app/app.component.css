@@ -19,7 +19,7 @@
     display: flex;
     gap: 1rem;
     padding: 0.75rem 1.5rem;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(9, 27, 227, 0.125);
     border-radius: 999px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
@@ -42,13 +42,25 @@
     transition: all 0.3s ease;
   }
   
-  .floating-buttons .btn:hover {
+  /* Estilos para los botones principales con gradiente */
+  .floating-buttons .btn-primary {
+    color: white;
+    border: none;
+    background-image: linear-gradient(45deg, #0d6efd, #0dcaf0);
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+    background-size: 200% auto;
+    transition: all 0.4s ease-in-out;
+  }
+
+  /* Efecto hover mejorado */
+  .floating-buttons .btn-primary:hover {
+    background-position: right center; /* Cambia la dirección del gradiente */
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
   }
   
   .floating-buttons .logout-button {
     background-color: #dc3545;
     border-color: #dc3545;
+    background-image: none; /* Nos aseguramos de que el botón de logout no tenga gradiente */
   }
-  

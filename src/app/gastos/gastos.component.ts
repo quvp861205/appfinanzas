@@ -4,6 +4,10 @@ import { CommonModule } from '@angular/common';
 import { GastoService, Gasto } from './services/gastos.service';
 import { DetalleGastosComponent } from "./detallegastos/detallegastoscomponent";
 import { FocoService } from "../utileria/foco.service";
+import { NotificationService } from '../utileria/notification.service';
+import { ConfirmationDialogService } from '../utileria/confirmation-dialog/confirmation-dialog.service';
+import { filter } from 'rxjs/operators';
+
 
 
 // Defining the interface locally as it's not provided by a central service.
@@ -33,6 +37,8 @@ export class MovimientosComponent implements AfterViewInit {
   private fb = inject(FormBuilder);
   private movimientoService = inject(GastoService);
   private focoService = inject(FocoService);
+  private notificationService = inject(NotificationService);
+  private confirmationDialogService = inject(ConfirmationDialogService);
 
   montoInput = viewChild<ElementRef<HTMLInputElement>>('montoInput');
   gastoSeleccionado = signal<Gasto | null>(null);
@@ -83,28 +89,35 @@ export class MovimientosComponent implements AfterViewInit {
       } else {
         await this.movimientoService.agregarGasto(movimientoData as Gasto);
       }
-      alert('Se ha guardado con exito.');
+      this.notificationService.show('Se ha guardado con exito.');
       this.resetForm();
     } catch (err) {
       console.error('Error al guardar el gasto:', err);
-      alert('Hubo un error al guardar el gasto.');
+      this.notificationService.show('Hubo un error al guardar el gasto.', true);
     }
   }
 
-  async onEliminar() {    
+  onEliminar() {
     const selectedMovimiento = this.gastoSeleccionado();
 
-    if (selectedMovimiento && selectedMovimiento.id && confirm('¿Estás seguro de que deseas eliminar este gasto?')) {
-      try {
-        await this.movimientoService.eliminarGasto(selectedMovimiento.id);
-        alert('Se ha eliminado con exito.');
-        this.resetForm();
-      } catch (err) {
-        console.error('Error al eliminar el gasto:', err);
-        alert('Hubo un error al eliminar el gasto.');
-      }
+    if (!selectedMovimiento || !selectedMovimiento.id) {
+      return;
     }
+
+    this.confirmationDialogService.open('¿Estás seguro de que deseas eliminar este gasto?')
+      .pipe(filter(confirmed => confirmed))
+      .subscribe(async () => {
+        try {
+          await this.movimientoService.eliminarGasto(selectedMovimiento.id!);
+          this.notificationService.show('Se ha eliminado con éxito.');
+          this.resetForm();
+        } catch (err) {
+          console.error('Error al eliminar el gasto:', err);
+          this.notificationService.show('Hubo un error al eliminar el gasto.', true);
+        }
+      });
   }
+
 
   resetForm() {
     this.gastoForm.reset({

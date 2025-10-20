@@ -1,5 +1,5 @@
 <div class="form-container shadow-lg p-4 rounded-3 mx-3 mt-5">
-  <h2 class="mb-4 text-center text-black text-opacity-50">{{ gastoSeleccionado() ? 'Editar Gasto' : 'Nuevo Gasto' }}</h2>
+  <h3 class="mb-4 text-center text-black">{{ gastoSeleccionado() ? 'Editar Gasto' : 'Nuevo Gasto' }}</h3>
   
   <form [formGroup]="gastoForm" (ngSubmit)="guardarMovimiento()">
 
