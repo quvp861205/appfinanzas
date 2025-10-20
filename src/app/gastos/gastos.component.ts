@@ -83,6 +83,7 @@ export class MovimientosComponent implements AfterViewInit {
       } else {
         await this.movimientoService.agregarGasto(movimientoData as Gasto);
       }
+      alert('Se ha guardado con exito.');
       this.resetForm();
     } catch (err) {
       console.error('Error al guardar el gasto:', err);
@@ -96,6 +97,7 @@ export class MovimientosComponent implements AfterViewInit {
     if (selectedMovimiento && selectedMovimiento.id && confirm('¿Estás seguro de que deseas eliminar este gasto?')) {
       try {
         await this.movimientoService.eliminarGasto(selectedMovimiento.id);
+        alert('Se ha eliminado con exito.');
         this.resetForm();
       } catch (err) {
         console.error('Error al eliminar el gasto:', err);

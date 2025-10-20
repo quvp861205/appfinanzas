@@ -94,6 +94,18 @@ export class AppComponent {
     });
   }
 
+  async openMsiresumenDialog(): Promise<void> {
+    const { Msiresumen } = await import('./msiresumen/msiresumen');
+    this.dialog.open(Msiresumen, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      panelClass: 'full-screen-dialog',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+  }
+
   async logout() {
     await this.authService.logout();
     this.router.navigate(['/login']);

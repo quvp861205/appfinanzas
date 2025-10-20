@@ -24,6 +24,14 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     z-index: 1000;
+    max-width: 90vw;
+    overflow-x: auto;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+  }
+
+  .floating-buttons::-webkit-scrollbar {
+    display: none;
   }
   
   .floating-buttons .btn {

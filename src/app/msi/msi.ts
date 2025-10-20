@@ -129,11 +129,13 @@ export class Msi {
         fecha: formValue.fecha!,
         meses: formValue.meses!
       });
+      alert('Se ha guardado con exito.');
       this.msiForm.reset();
       this.selectedDescription.set('');
       this.selectedDate.set('');
     } catch (error) {
-
+      console.log("Error al guardar gasto fijo", error);
+      alert('Hubo un error al guardar el gasto fijo.');
     }
   }
 
@@ -151,9 +153,11 @@ export class Msi {
     if (confirm(`¿Estás seguro de que quieres eliminar todos los registros para \"${description}\"?`)) {
       try {
         await this.msiService.deleteMsiByDescription(description);
+        alert('Se han eliminado con exito.');
 
       } catch (error) {
-
+        console.log("Error eliminar gastos fijos", error);
+        alert('Hubo un error al eliminar los gastos fijos.');
       }
     }
   }

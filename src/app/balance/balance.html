@@ -70,7 +70,7 @@
       @if (semanaActual(); as semana) {
         <div class="week-card current-week-card">
           <div class="week-header">
-            <span class="week-number">Semana Actual ({{ semana.numSemana }})</span>
+            <span class="week-number">Semana {{ semana.numSemana }}</span>
             <span class="week-dates">
               {{ semana.fechaInicio | date:"EEE d 'de' MMM" }} - {{ semana.fechaFin | date:"EEE d 'de' MMM" }}
               <span class="week-days">({{ semana.dias }} días)</span>

@@ -97,13 +97,16 @@ export class IngresosComponent {
 
     try {
       await this.ingresosService.addIngreso(nuevoIngreso);
+      alert('Se ha guardado con exito.');
       this.ingresoForm.reset({
         monto: '',
         descripcion: '',
         fecha: new Date().toISOString().substring(0, 10)
       });
+      
     } catch (error) {
       console.error('Error al guardar el ingreso:', error);
+      alert('Hubo un error al guardar el ingreso.');
     }
   }
 
@@ -113,8 +116,10 @@ export class IngresosComponent {
     if (confirm('¿Estás seguro de que deseas eliminar este ingreso?')) {
       try {
         await this.ingresosService.deleteIngreso(id);
+        alert('Se ha eliminado con exito.');
       } catch (error) {
         console.error('Error al eliminar el ingreso:', error);
+        alert('Hubo un error al eliminar el ingreso.');
       }
     }
   }
